@@ -6,15 +6,34 @@
 
 struct PLANE
 {
-	double scale;
-	std::vector<std::vector<std::vector<cv::Point3d> > > lines3d;
+    double scale;
+    std::vector<std::vector<std::vector<cv::Point3d> > > lines3d;
+    
+    // for visualization and motion estimation
+    pcl::PointCloud<PointT> points;
+    double curvature;
+    Eigen::Matrix3d covariance;
+    Eigen::Vector3d mean;
+    Eigen::Vector3d norm;
+    Eigen::Vector3d norm_test;
+    double negative_OA_dot_norm;
+    double residual;
+    bool valid;
+    
 
-	PLANE &operator =(const PLANE &info)
-	{
-		this->scale    = info.scale;
-		this->lines3d     = info.lines3d;
-		return *this;
-	}
+    PLANE &operator =(const PLANE &info)
+    {
+	this->mean                 = info.mean;
+	this->norm                 = info.norm;
+	this->scale                = info.scale;
+	this->points               = info.points;
+	this->lines3d              = info.lines3d;
+	this->residual             = info.residual;
+	this->covariance           = info.covariance;	
+	this->negative_OA_dot_norm = info.negative_OA_dot_norm;
+		
+	return *this;
+    }
 };
 
 class LineDetection3D 
@@ -23,7 +42,7 @@ public:
 	LineDetection3D();
 	~LineDetection3D();
 
-	void run( PointCloud<double> &data, int k, std::vector<PLANE> &planes, std::vector<std::vector<cv::Point3d> > &lines, std::vector<double> &ts );
+	void run( pcl::PointCloud<PointT>::Ptr data, int k, std::vector<PLANE> &planes, std::vector<std::vector<cv::Point3d> > &lines, std::vector<double> &ts );
 
 	void pointCloudSegmentation( std::vector<std::vector<int> > &regions );
 
@@ -45,11 +64,18 @@ public:
 	void lineMerging( std::vector<PLANE> &planes, std::vector<std::vector<cv::Point3d> > &lines );
 
 public:
+        /// point based parameters
 	int k;
 	int pointNum;
 	double scale, magnitd;
 	std::vector<PCAInfo> pcaInfos;
-	PointCloud<double> pointData;
+	pcl::PointCloud<PointT>::Ptr pointData;
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr planePoints;
+	pcl::PointCloud<pcl::Normal>::Ptr planeNormals;
+	pcl::PointCloud<pcl::PointXYZ>::Ptr planeCentroid;
+	
+	/// voxel based parameters
+	std::vector<VoxelInfo> voxelInfos;
 };
 
 #endif //_LINE_DETECTION_H_
