@@ -13,6 +13,14 @@ Usage:
 2. run the code
 3. The default parameters are useful for general cases without tunning(at least for these cases in the experiences of the paper). However, you can also adjust the parameters if the result is not very good.
 
+mkdir build
+cd build
+cmake ..
+make
+
+run:
+./LineFromPointCloud ~/workspace/pcd/electric.pcd  ~/workspace/pcd/electric_linedetect.pcd pcd
+
 Performance:
 ---
 On a computer with Intel Core i5-3550p CPU, the computing time for point clouds with 30M, 20M, 10M, 5M, 2M and 1M points is 130s, 80s, 40s, 20s, 8s and 4s, respectively.
