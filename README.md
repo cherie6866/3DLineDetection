@@ -14,9 +14,13 @@ Usage:
 3. The default parameters are useful for general cases without tunning(at least for these cases in the experiences of the paper). However, you can also adjust the parameters if the result is not very good.
 
 mkdir build
+
 cd build
+
 cmake ..
+
 make
+
 
 run:
 ./LineFromPointCloud ~/workspace/pcd/electric.pcd  ~/workspace/pcd/electric_linedetect.pcd pcd
